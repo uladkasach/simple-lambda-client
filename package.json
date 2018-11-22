@@ -12,7 +12,7 @@
     "build": "rm dist/ -rf && npm run build-ts",
     "deploy": "npm run build && sls deploy -v",
     "preversion": "npm run test && npm run integration-test",
-    "postversion": "git push --tags"
+    "postversion": "git push && git push --tags"
   },
   "author": "",
   "license": "ISC",
