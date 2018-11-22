@@ -44,3 +44,14 @@ describe('service-ideas-client', () => {
   });
 });
 ```
+
+
+Serverless.yml (ensure that your lambda has permission to run the service):
+```yml
+iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - lambda:InvokeFunction
+      - lambda:InvokeAsync
+    Resource: "*" # TODO: figure out how to specify the resource better (e.g., specify exactly which lambda)
+```
