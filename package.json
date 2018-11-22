@@ -1,0 +1,36 @@
+{
+  "name": "lambda-service-client",
+  "version": "0.0.1",
+  "description": "Extend this class to interact with your lambda-based micro-services in a simple, well defined, and standard way.",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "test": "jest --forceExit --coverage --verbose",
+    "integration-test": "jest --config ./jest.integration.config.js",
+    "check-types": "tsc --noEmit",
+    "build-ts": "tsc -p ./tsconfig.build.json",
+    "build": "rm dist/ -rf && npm run build-ts",
+    "deploy": "npm run build && sls deploy -v",
+    "preversion": "npm run test && npm run acceptance-test",
+    "postversion": "git push --tags"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-lambda": "^0.1.2",
+    "aws-sdk": "^2.305.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.15",
+    "@types/dotenv": "^6.1.0",
+    "@types/jest": "^23.3.9",
+    "@types/node": "^10.12.10",
+    "dotenv": "^6.1.0",
+    "jest": "^23.5.0",
+    "ts-jest": "^23.10.4",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint-consistent-codestyle": "^1.14.1",
+    "typescript": "^3.1.6"
+  }
+}
