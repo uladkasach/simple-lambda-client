@@ -11,7 +11,14 @@ const executeLambdaInvocation = async ({ namespace, handlerName, event }: { name
     Payload: payload,
   }).promise();
   if (response.StatusCode !== 200) throw new UnsuccessfulStatusCodeError({ code: response.StatusCode, payload: response.Payload });
-  return response.Payload;
+  let parsedResult;
+  try {
+    parsedResult = JSON.parse(response.Payload as string);
+  } catch (error) {
+    // if here, then we couldn't parse the result, it wasn't json. so just return the result unparsed
+    parsedResult = response.Payload;
+  }
+  return parsedResult;
 };
 
 export default executeLambdaInvocation;
