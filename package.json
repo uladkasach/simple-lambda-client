@@ -10,7 +10,7 @@
     "check-types": "tsc --noEmit",
     "build-ts": "tsc -p ./tsconfig.build.json",
     "build": "rm dist/ -rf && npm run build-ts",
-    "preversion": "npm run test && npm run integration-test",
+    "preversion": "npm run test && npm run integration-test && npm run build",
     "postversion": "git push && git push --tags",
     "prepublish": "npm run test && npm run integration-test && npm run build"
   },
