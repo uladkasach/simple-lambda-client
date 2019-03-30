@@ -5,14 +5,16 @@
   "main": "dist/index.js",
   "scripts": {
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "test": "jest --forceExit --coverage --verbose",
+    "test": "npm run check-types && npm run lint && npm run unit-test && npm run integration-test",
+    "unit-test": "jest --forceExit --coverage --verbose",
     "integration-test": "jest --config ./jest.integration.config.js",
     "check-types": "tsc --noEmit",
     "build-ts": "tsc -p ./tsconfig.build.json",
     "build": "rm dist/ -rf && npm run build-ts",
-    "preversion": "npm run test && npm run integration-test && npm run build",
-    "postversion": "git push && git push --tags",
-    "prepublish": "npm run test && npm run integration-test && npm run build"
+    "prepush": "npm run test && npm run integration-test && npm run build",
+    "preversion": "npm run prepush",
+    "postversion": "git push origin master --tags --no-verify",
+    "prepublish": "npm run test && npm run build"
   },
   "author": "",
   "license": "ISC",
