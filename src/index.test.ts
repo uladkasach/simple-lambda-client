@@ -1,11 +1,9 @@
 import LambdaServiceClient from './index';
+import executeLambdaInvocationMock from './execute';
 
-const payload = {
-  some: 'responseData',
-  StatusCode: 200, // the mock function looks for this to decide which status code to display
-};
-const errorPayload = {
-  StatusCode: 200, // the mock function looks for this to decide which status code to display
+jest.mock('./execute');
+
+const errorResponse = {
   errorMessage: 'Data must be a string or a buffer',
   errorType: 'TypeError',
   stackTrace: [
@@ -25,25 +23,64 @@ class ServiceImagesClient extends LambdaServiceClient {
   constructor() {
     super({ namespace: 'awesome-service-dev' });
   }
-  public async doAwesomeThing(payload: any) {
-    return await super.execute({ handlerName: 'doAwesomeThing', event: payload });
+  public async doAwesomeThing() {
+    return await super.execute({ handlerName: 'doAwesomeThing', event: { test: 'awesome' } });
   }
 }
 const testClient = new ServiceImagesClient();
 
 // run the test
-describe('lambda-service-client', () => {
-  it('should be able to invoke an aws-lambda-function with the namespace', async () => {
-    const response = await testClient.doAwesomeThing(payload);
-    expect(response.FunctionName).toEqual('awesome-service-dev-doAwesomeThing'); // function name should be accurate
-    expect(response.Payload).toEqual(JSON.stringify(payload)); // payload should be accurate
+describe('LambdaServiceClient', () => {
+  beforeEach(() => jest.clearAllMocks());
+  describe('execute', () => {
+    it('should request execution with the accurate handlerName and namespace', async () => {
+      await testClient.doAwesomeThing();
+      expect((executeLambdaInvocationMock as jest.Mock).mock.calls.length).toEqual(1);
+      expect((executeLambdaInvocationMock as jest.Mock).mock.calls[0][0]).toMatchObject({
+        handlerName: 'doAwesomeThing',
+        namespace : 'awesome-service-dev',
+      });
+    });
+    it('should forward the accurate event data to the execution method', async () => {
+      await testClient.doAwesomeThing();
+      expect((executeLambdaInvocationMock as jest.Mock).mock.calls.length).toEqual(1);
+      expect((executeLambdaInvocationMock as jest.Mock).mock.calls[0][0]).toMatchObject({
+        event: {
+          test: 'awesome',
+        },
+      });
+    });
+    it('should resolve the execution response', async () => {
+      const testResponse = { hello: 'there' };
+      (executeLambdaInvocationMock as jest.Mock).mockReturnValueOnce(testResponse);
+      const response = await testClient.doAwesomeThing();
+      expect(response).toEqual(testResponse);
+    });
   });
-  it('should throw a helpful error if an error response is detected', async () => {
-    try {
-      await testClient.doAwesomeThing(errorPayload);
-      throw new Error('should not reach here');
-    } catch (error) {
-      expect(error.constructor.name).toEqual('LambdaInvocationError');
-    }
+  describe('error handling', () => {
+    it('should throw a helpful error if the lambda resolves successfuly with an error object', async () => {
+      (executeLambdaInvocationMock as jest.Mock).mockReturnValueOnce(errorResponse);
+      try {
+        await testClient.doAwesomeThing();
+        throw new Error('should not reach here');
+      } catch (error) {
+        // console.log(error);
+        // throw new Error(error);
+        expect(error).toHaveProperty('event');
+        expect(error).toHaveProperty('lambda');
+        expect(error).toHaveProperty('response');
+        expect(error.message).toEqual(`An error was returned as the lambda invocation response for the lambda 'awesome-service-dev-doAwesomeThing': \"Data must be a string or a buffer\". See error properties for more details.`);
+        expect(error.event).toEqual({ test: 'awesome' });
+        expect(error.response).toEqual(errorResponse);
+        expect(error.lambda).toEqual('awesome-service-dev-doAwesomeThing');
+      }
+    });
+  });
+  describe('prior edge cases', () => {
+    it('should be able to handle a `null` response', async () => {
+      (executeLambdaInvocationMock as jest.Mock).mockReturnValueOnce(null);
+      const response = await testClient.doAwesomeThing();
+      expect(response).toEqual(null);
+    });
   });
 });

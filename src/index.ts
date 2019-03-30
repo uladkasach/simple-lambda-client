@@ -9,10 +9,12 @@ export default class LambdaServiceClient {
 
   protected async execute({ handlerName, event }: { handlerName: string, event: any }) { // wrap execute method with automatically injecting the namespace
     const response = await executeLambdaInvocation({ namespace: this.namespace, handlerName, event });
-    const isAnErrorPayload = false // check if any of the following properties exist in the payload (since some responses may exclude one or the other)
-      || response.errorMessage
-      || response.errorType
-      || response.stackTrace;
+    const isAnErrorPayload = !!response && // if the response exists and is truthy, then it may be an error object
+      (false // check if any of the following properties exist in the payload (since some responses may exclude one or the other)
+        || response.errorMessage
+        || response.errorType
+        || response.stackTrace
+      );
     if (isAnErrorPayload) throw new LambdaInvocationError({ response, lambda: [this.namespace, handlerName].join('-'), event });
     return response;
   }
