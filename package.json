@@ -1,6 +1,6 @@
 {
   "name": "lambda-service-client",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Extend this class to interact with your lambda-based micro-services in a simple, well defined, and standard way.",
   "main": "dist/index.js",
   "scripts": {
