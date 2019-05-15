@@ -4,9 +4,6 @@ import dotenv from 'dotenv';
 // load environmental variables from .env
 dotenv.config();
 
-// unmock aws calls, since this is an integration test
-jest.unmock('aws-sdk');
-
 // load test details from env vars
 const testPayload = JSON.parse(process.env.EXECUTE_PAYLOAD as string);
 const namespace = process.env.EXECUTE_NAMESPACE as string;

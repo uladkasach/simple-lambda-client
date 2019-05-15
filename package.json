@@ -20,7 +20,8 @@
   "license": "ISC",
   "dependencies": {
     "aws-lambda": "^0.1.2",
-    "aws-sdk": "^2.305.0"
+    "aws-sdk": "^2.305.0",
+    "simple-sha256": "^1.0.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.15",

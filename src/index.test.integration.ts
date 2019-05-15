@@ -1,4 +1,4 @@
-import LambdaServiceClient from './index';
+import LambdaServiceClient, { Determinism } from './index';
 import dotenv from 'dotenv';
 
 // load environmental variables from .env
@@ -19,11 +19,15 @@ class ServiceImagesClient extends LambdaServiceClient {
   public async doAwesomeThing(payload: any) {
     return await super.execute({ handlerName, event: payload });
   }
+  public async doAwesomeTimeDeterministicThing(payload: any) {
+    return await super.execute({ handlerName, event: payload, determinism: Determinism.TIME_DETERMINISTIC });
+  }
 }
 const testClient = new ServiceImagesClient();
 
 // run the test
 describe('lambda-service-client', () => {
+  jest.setTimeout(30000); // since we dont care about how fast they execute
   it('should be able to invoke an aws-lambda-function with the namespace requested', async () => {
     await testClient.doAwesomeThing(testPayload);
   });
@@ -34,5 +38,15 @@ describe('lambda-service-client', () => {
     } catch (error) {
       expect(error.constructor.name).toEqual('LambdaInvocationError');
     }
+  });
+  it('should be able to invoke an aws-lambda-function with the namespace requested with TIME_DETERMINISTIC request deduplication', async () => {
+    const promises = [
+      testClient.doAwesomeTimeDeterministicThing(testPayload),
+      testClient.doAwesomeTimeDeterministicThing(testPayload),
+      testClient.doAwesomeTimeDeterministicThing(testPayload),
+    ];
+    const result = await testClient.doAwesomeTimeDeterministicThing(testPayload);
+    const results = await Promise.all(promises);
+    results.forEach(thisResult => expect(thisResult).toEqual(result));
   });
 });
