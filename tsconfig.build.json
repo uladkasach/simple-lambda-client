@@ -3,33 +3,17 @@
     "strict": true,
     "module": "commonjs",
     "esModuleInterop": true,
+    "declaration": true,
     "target": "es6",
     "noImplicitAny": true,
-    "declaration": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
-    "lib": [
-      "es7",
-      "esnext.asynciterable"
-    ],
+    "lib": ["dom", "es7"]
   },
-  "filesGlob": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.test.js",
-    "src/**/__mocks__/**/*.ts",
-    "src/**/__mocks__/**/*.js",
-    "dist",
-    "coverage",
-    "node_modules",
-    "acceptance-tests",
-    "jest.integration.config.js",
-    "jest.config.js"
-  ],
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.integration.ts", "**/__test_utils__/**/*.ts"],
   "atom": {
     "rewriteTsconfig": false
   }
