@@ -1,11 +1,11 @@
 {
-  "name": "lambda-service-client",
+  "name": "simple-lambda-client",
   "version": "2.0.0",
   "description": "A simple, convenient way to invoke aws lambda functions with best practices.",
   "author": "UladKasach @uladkasach",
   "license": "MIT",
-  "repository": "uladkasach/lambda-service-client",
-  "homepage": "https://github.com/uladkasach/lambda-service-client",
+  "repository": "uladkasach/simple-lambda-client",
+  "homepage": "https://github.com/uladkasach/simple-lambda-client",
   "keywords": [
     "aws",
     "lambda",
@@ -14,7 +14,7 @@
     "serverless",
     "typescript"
   ],
-  "bugs": "https://github.com/uladkasach/lambda-service-client/issues",
+  "bugs": "https://github.com/uladkasach/simple-lambda-client/issues",
   "main": "dist/index.js",
   "engines": {
     "node": ">=8.0.0"

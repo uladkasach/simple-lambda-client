@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 
 import { testIfNotCicd } from './__test_utils__/testIfNotCicd';
-import { createLambdaServiceClient } from './createLambdaServiceClient';
+import { invokeLambdaFunction } from './invokeLambdaFunction';
 
 // load environmental variables from .env
 dotenv.config();
@@ -14,8 +14,7 @@ const stage = process.env.EXECUTE_STAGE as string;
 
 describe('createLambdaServiceClient', () => {
   testIfNotCicd('should be able to call service and get response', async () => {
-    const invokeLambdaFunction = createLambdaServiceClient({ serviceName, stage });
-    const result = await invokeLambdaFunction({ functionName, event: JSON.parse(testPayload) });
+    const result = await invokeLambdaFunction({ service: serviceName, stage, function: functionName, event: JSON.parse(testPayload) });
     expect(result).toEqual({ job: null });
   });
 });
