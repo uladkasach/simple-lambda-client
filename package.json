@@ -1,6 +1,6 @@
 {
   "name": "simple-lambda-client",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A simple, convenient way to invoke aws lambda functions with best practices.",
   "author": "UladKasach @uladkasach",
   "license": "MIT",
