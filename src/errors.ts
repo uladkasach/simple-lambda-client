@@ -1,6 +1,7 @@
-// tslint:disable max-classes-per-file
+/* eslint-disable max-classes-per-file */
+
 export class UnsuccessfulStatusCodeError extends Error {
-  constructor({ code, payload }: { code: number | undefined, payload: any }) {
+  constructor({ code, payload }: { code: number | undefined; payload: any }) {
     const message = `Status code does not indicate success: ${code};
     ${JSON.stringify(payload)}`;
     super(message);
@@ -8,10 +9,10 @@ export class UnsuccessfulStatusCodeError extends Error {
 }
 
 export class LambdaInvocationError extends Error {
-  private lambda: string;
-  private response: any;
-  private event: any;
-  constructor({ lambda, response, event }: { lambda: string, response: any, event: any }) {
+  public lambda: string;
+  public response: any;
+  public event: any;
+  constructor({ lambda, response, event }: { lambda: string; response: any; event: any }) {
     const message = `An error was returned as the lambda invocation response for the lambda '${lambda}': "${response.errorMessage}". See error properties for more details.`;
     super(message);
     this.lambda = lambda;
